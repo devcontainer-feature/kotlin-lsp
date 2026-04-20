@@ -50,6 +50,31 @@ $ color
 my favorite color is green
 ```
 
+### `kotlin-lsp`
+
+Installs the [JetBrains Kotlin Language Server](https://github.com/Kotlin/kotlin-lsp)
+into the container and registers it as the `kotlin-lsp` command on `PATH`.
+By default the latest published release is used; pin a specific version with
+the `version` option. OpenJDK 17 is installed automatically when no Java
+runtime of version 17+ is detected.
+
+```jsonc
+{
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "features": {
+        "ghcr.io/devcontainers/feature-starter/kotlin-lsp:1": {
+            "version": "latest"
+        }
+    }
+}
+```
+
+```bash
+$ kotlin-lsp --help
+```
+
+Supported architectures: `linux-x64`, `linux-aarch64`.
+
 ## Repo and Feature Structure
 
 Similar to the [`devcontainers/features`](https://github.com/devcontainers/features) repo, this repository has a `src` folder.  Each Feature has its own sub-folder, containing at least a `devcontainer-feature.json` and an entrypoint script `install.sh`. 

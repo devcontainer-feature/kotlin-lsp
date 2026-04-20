@@ -1,0 +1,16 @@
+{
+    "default": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "kotlin-lsp": {}
+        }
+    },
+    "pinned_version": {
+        "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+        "features": {
+            "kotlin-lsp": {
+                "version": "262.2310.0"
+            }
+        }
+    }
+}
