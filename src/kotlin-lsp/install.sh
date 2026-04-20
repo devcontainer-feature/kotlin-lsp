@@ -64,11 +64,35 @@ java_major_version() {
     esac
 }
 
+install_java() {
+    # Prefer the highest available LTS >= 17. Different Debian/Ubuntu releases
+    # ship different candidates: bookworm has openjdk-17, trixie/noble have
+    # openjdk-21, etc. default-jre-headless is the universal fallback.
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update -y
+    local pkg
+    for pkg in openjdk-21-jre-headless openjdk-17-jre-headless default-jre-headless; do
+        echo "Attempting to install Java package: $pkg"
+        if apt-get install -y --no-install-recommends "$pkg"; then
+            echo "Installed Java package: $pkg"
+            return 0
+        fi
+    done
+    echo "ERROR: failed to install any of the candidate Java packages" >&2
+    return 1
+}
+
 CURRENT_JAVA="$(java_major_version)"
 if [ "${CURRENT_JAVA:-0}" -lt 17 ]; then
     if [ "${INSTALLJAVA,,}" = "true" ]; then
-        echo "Java >= 17 not found (detected: ${CURRENT_JAVA:-none}); installing openjdk-17-jre-headless"
-        apt_install openjdk-17-jre-headless
+        echo "Java >= 17 not found (detected: ${CURRENT_JAVA:-none}); installing JRE"
+        install_java
+        CURRENT_JAVA="$(java_major_version)"
+        if [ "${CURRENT_JAVA:-0}" -lt 17 ]; then
+            echo "ERROR: installed JRE reports version ${CURRENT_JAVA}; kotlin-lsp requires >= 17" >&2
+            exit 1
+        fi
+        echo "Detected Java major version after install: ${CURRENT_JAVA}"
     else
         echo "WARNING: Java >= 17 was not found and installJava=false. kotlin-lsp will not run until a JRE is provided." >&2
     fi
