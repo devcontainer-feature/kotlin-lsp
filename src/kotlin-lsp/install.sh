@@ -177,8 +177,9 @@ unzip -q "${TMP_DIR}/${ARCHIVE}" -d "$INSTALL_DIR"
 # once, here, while we still have root.
 chmod -R a+rX "$INSTALL_DIR"
 find "$INSTALL_DIR" -type f -name '*.sh' -exec chmod a+x {} +
-find "$INSTALL_DIR" -type d -name bin -print0 \
-    | xargs -0 -I{} find {} -maxdepth 1 -type f -exec chmod a+x {} +
+while IFS= read -r -d '' bin_dir; do
+    find "$bin_dir" -maxdepth 1 -type f -exec chmod a+x {} +
+done < <(find "$INSTALL_DIR" -type d -name bin -print0)
 
 # Locate the launcher script. Different releases nest content differently,
 # so search rather than hard-code a path.
