@@ -170,6 +170,16 @@ rm -rf "$INSTALL_DIR"
 mkdir -p "$INSTALL_DIR"
 unzip -q "${TMP_DIR}/${ARCHIVE}" -d "$INSTALL_DIR"
 
+# The distributed zip sometimes drops the executable bit on the bundled JRE
+# binaries (java, javac, ...), and the upstream launcher tries to chmod +x
+# them at runtime — which fails when the container runs as a non-root
+# remoteUser because the install dir is root-owned. Fix the permissions
+# once, here, while we still have root.
+chmod -R a+rX "$INSTALL_DIR"
+find "$INSTALL_DIR" -type f -name '*.sh' -exec chmod a+x {} +
+find "$INSTALL_DIR" -type d -name bin -print0 \
+    | xargs -0 -I{} find {} -maxdepth 1 -type f -exec chmod a+x {} +
+
 # Locate the launcher script. Different releases nest content differently,
 # so search rather than hard-code a path.
 LAUNCHER="$(find "$INSTALL_DIR" -maxdepth 4 -type f -name 'kotlin-lsp.sh' | head -n 1)"
@@ -177,7 +187,7 @@ if [ -z "$LAUNCHER" ]; then
     echo "ERROR: kotlin-lsp.sh not found inside extracted archive at $INSTALL_DIR" >&2
     exit 1
 fi
-chmod +x "$LAUNCHER"
+chmod a+x "$LAUNCHER"
 
 # ---------------------------------------------------------------------------
 # Register CLI command
