@@ -1,0 +1,23 @@
+{
+    "name": "Kotlin LSP",
+    "id": "kotlin-lsp",
+    "version": "1.0.0",
+    "description": "Installs the JetBrains Kotlin Language Server (kotlin-lsp) and registers it as a CLI command on the PATH.",
+    "documentationURL": "https://github.com/Kotlin/kotlin-lsp",
+    "options": {
+        "version": {
+            "type": "string",
+            "default": "latest",
+            "description": "Version of kotlin-lsp to install (e.g. '262.2310.0'), or 'latest' to fetch the most recent release."
+        },
+        "installJava": {
+            "type": "boolean",
+            "default": true,
+            "description": "Install OpenJDK 17 (headless JRE) when no Java >= 17 is detected on PATH."
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils",
+        "ghcr.io/devcontainers/features/java"
+    ]
+}
