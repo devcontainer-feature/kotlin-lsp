@@ -1,7 +1,7 @@
 {
     "name": "Kotlin LSP",
     "id": "kotlin-lsp",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "description": "Installs the JetBrains Kotlin Language Server (kotlin-lsp) and registers it as a CLI command on the PATH.",
     "documentationURL": "https://github.com/Kotlin/kotlin-lsp",
     "options": {
